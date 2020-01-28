@@ -1,0 +1,9 @@
+---
+- name: copy files from local to remote
+  hosts: all
+  tasks:
+    - name: filecopy
+      copy:
+        src: /tmp/file
+        dst: /home
+      
