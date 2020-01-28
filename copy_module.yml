@@ -1,6 +1,9 @@
 ---
 - name: copy files from local to remote
   hosts: app
+  vars:
+   - host_vars
+   - group_vars
   tasks:
     - name: filecopy
       copy:
