@@ -1,9 +1,9 @@
 ---
 - name: copy files from local to remote
-  hosts: all
+  hosts: app
   tasks:
     - name: filecopy
       copy:
         src: /tmp/file
-        dst: /home
+        dest: /home
       
