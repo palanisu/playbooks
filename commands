@@ -1,5 +1,5 @@
-o Below command to execute script with other user
-$ansible app1 -i inventory/host_vars/ -m shell -a "/home/testuser/test.sh" --become --become-method su --become-user testuser -K
+
+
 To manage a system service (which requires root privileges) when connected as a non-root user (this takes advantage of the fact that the default value of become_user is root):
 
 - name: Ensure the httpd service is running
@@ -21,3 +21,33 @@ To do something as the nobody user when the shell is nologin:
   become_method: su
   become_user: nobody
   become_flags: '-s /bin/sh'
+
+Modules to Practise
+====================
+
+1. command
+    o Its require python module in manage nodes to run commands.
+    o Below command to execute script with other user
+      $ ansible app1 -i inventory/host_vars/ -m shell -a "/home/testuser/test.sh" --become --become-method su --become-user testuser -K
+      $ ansible controller -m command -a 'setfacl -m u:praveen:rwx /var/log'    --become --become-method su --become-user root -K 
+      $ ansible local -m command -a 'setfacl -m u:ansiuser:rwx /var/' --become --become-method su --become-user root --ask-become-pass
+
+2. raw
+    o Raw is not required any python module and it'll Run as local commands.
+    
+3. file
+4. shell
+5. get_url
+6. copy
+7. user
+8. group
+9. lineinfile
+10. replace
+11. parted
+12. filesystem
+13. setup
+14. stat
+15. uri
+16. fetch
+17. yum
+18. service
