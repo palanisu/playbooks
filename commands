@@ -1,0 +1,2 @@
+o Below command to execute script with other user
+$ansible app1 -i inventory/host_vars/ -m shell -a "/home/testuser/test.sh" --become --become-method su --become-user testuser -K
