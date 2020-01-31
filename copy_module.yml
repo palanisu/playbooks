@@ -1,12 +1,14 @@
 ---
 - name: copy files from local to remote
   hosts: app
-  vars:
-   - host_vars
-   - group_vars
   tasks:
+    - name: Create dir
+      file:
+        path: /tmp/dir
+        state: directory
+
     - name: filecopy
       copy:
         src: /tmp/file
-        dest: /home
-      
+        dest: /tmp/dir  
+
