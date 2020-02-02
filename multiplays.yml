@@ -1,0 +1,22 @@
+---
+- name: multiple plays
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: install firewall package
+    yum:
+     - httpd
+     - firewalld
+    state: latest
+
+  - name: start services
+    service:
+      name: "{{ item }}"
+      state: started
+      enable: yes
+      with_items:
+        - httpd
+        - firewalld
+
+  - name: input from include file
+    include: firewall.yml

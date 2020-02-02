@@ -1,0 +1,9 @@
+---
+- name: Add firewall rules
+  tasks:
+    - name: Allow httpd in firewalld
+      firewalld:
+        - permanent: yes
+        - port: 80/tcp
+        - state: enabled
+        - immediate: yes
