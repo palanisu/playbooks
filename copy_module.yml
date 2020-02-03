@@ -11,4 +11,16 @@
       copy:
         src: /tmp/file
         dest: /tmp/dir  
-
+    - name: content adding
+      copy:
+        content: "Addind data in dest"
+        dest: /tmp/dir/file
+    - name: copy Recusrisve
+      copy:
+        src: "{{ item }}"
+        dest: /tmp/
+      with_items:
+        - /home/ansiuser/playbooks/data1
+        - /home/ansiuser/playbooks/data2
+        - /home/ansiuser/playbooks/data3
+        - /home/ansiuser/playbooks/data4

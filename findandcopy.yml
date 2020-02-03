@@ -1,0 +1,27 @@
+---
+  - name: find and copy the files
+    hosts: app
+    tasks:
+    - name: fild the files using find madules
+      find:
+        paths: /tmp
+        patterns: "*.txt"
+      register: files_matched
+    
+    - name: debug the details
+      debug:
+        msg: "{{ files_matched.files.path }}"
+
+    - name: dir older ages
+      find:
+        paths: /tmp
+        age: 2d
+        file_type: directory
+      register: dirs_matched
+    - name: display dirs
+      debug:
+        msg: "{{ dirs_matched }}"
+
+    - name:  copy the directories
+      command:
+       
