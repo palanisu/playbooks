@@ -1,0 +1,6 @@
+---
+  - name: Deploy web application
+    hosts: db_and_web_server1, db_and_web_server2
+    tasks:
+      - name: Ping Check
+        ping:
