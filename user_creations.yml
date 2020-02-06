@@ -1,0 +1,34 @@
+---
+- name: Create Users
+  become: true
+  become_method: sudo
+  become_user: root
+  tasks:
+    - name: Create Groups
+      group:
+        name: "{{ item.name }}"
+        gid: "{{ item.gid }}"
+        state: present
+      loop:
+        - { name: 'devops', gid: '1100' }
+        - { name: 'ops', gid: '1101' }
+    
+    - name: User Creations
+      user:
+        name: "{{ item.name }}"
+        uid: "{{ item.uid }}"
+        home: "{{ item.home }}"
+        password: "{{ item.password }}"
+        shell: "{{ item.shell }}"
+        group: "{{ item.group }}"
+        groups: "{{ item.groups }}"
+        generate_ssh_key: "{{ item.generate_ssh_key }}"
+      loop:
+        - { name: 'john', uid: '1200', home: '/home/john', password: 'aswq12', shell: '/bin/bash', group: 'devops', groups: 'ops', generate_ssh_key: 'yes' }
+        - { name: 'james', uid: '1201', home: '/home/james', password: 'aswq12', shell: '/bin/bash', groups: 'ops', generate_ssh_key: 'yes' }
+        - { name: 'joe', uid: '1202', home: '/home/joe', password: 'aswq12', shell: '/bin/bash', groups: 'devops', generate_ssh_key: 'yes' }
+        - { name: 'doe', uid: '1203', home: '/home/doe', password: 'aswq12', shell: '/bin/bash', group: 'ops', groups: 'devops', generate_ssh_key: 'yes' }
+        - { name: 'smith', uid: '1204', home: '/home/smith', password: 'aswq12', shell: '/bin/bash', groups: 'ops', generate_ssh_key: 'yes' }
+
+      
+        
