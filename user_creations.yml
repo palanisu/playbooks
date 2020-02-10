@@ -1,5 +1,6 @@
 ---
 - name: Create Users
+  hosts: db
   become: true
   become_method: sudo
   become_user: root
@@ -25,10 +26,10 @@
         generate_ssh_key: "{{ item.generate_ssh_key }}"
       loop:
         - { name: 'john', uid: '1200', home: '/home/john', password: 'aswq12', shell: '/bin/bash', group: 'devops', groups: 'ops', generate_ssh_key: 'yes' }
-        - { name: 'james', uid: '1201', home: '/home/james', password: 'aswq12', shell: '/bin/bash', groups: 'ops', generate_ssh_key: 'yes' }
-        - { name: 'joe', uid: '1202', home: '/home/joe', password: 'aswq12', shell: '/bin/bash', groups: 'devops', generate_ssh_key: 'yes' }
+        - { name: 'james', uid: '1201', home: '/home/james', password: 'aswq12', shell: '/bin/bash', group: 'ops', groups: 'devops', generate_ssh_key: 'yes' }
+        - { name: 'joe', uid: '1202', home: '/home/joe', password: 'aswq12', shell: '/bin/bash', group: 'ops', groups: 'devops', generate_ssh_key: 'yes' }
         - { name: 'doe', uid: '1203', home: '/home/doe', password: 'aswq12', shell: '/bin/bash', group: 'ops', groups: 'devops', generate_ssh_key: 'yes' }
-        - { name: 'smith', uid: '1204', home: '/home/smith', password: 'aswq12', shell: '/bin/bash', groups: 'ops', generate_ssh_key: 'yes' }
+        - { name: 'smith', uid: '1204', home: '/home/smith', password: 'aswq12', shell: '/bin/bash', group: 'ops', groups: 'ops', generate_ssh_key: 'yes' }
 
       
         

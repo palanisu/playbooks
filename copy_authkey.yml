@@ -1,0 +1,10 @@
+---
+- name: Copy auth keys to newly added managed nodes.
+  hosts: appdb
+  tasks:
+    - name: Key copy to managed nodes
+      authorized_key:
+        user: ansiuser
+        state: present
+        exclusive: True
+        key: "{{ lookup('file', '/home/ansiuser/.ssh/id_rsa.pub') }}"
