@@ -1,0 +1,13 @@
+---
+- name: Create Users
+  remote_user: root
+  hosts: db
+  gather_facts: false
+  tasks:
+    - name: Create user to manage ansible tasks
+      user:
+        name: ansiuser
+        shell: /bin/bash
+        home: /home/ansiuser
+        password: aswq12
+        comment: Manage Ansible Tasks
