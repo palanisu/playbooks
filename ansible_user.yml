@@ -3,11 +3,22 @@
   remote_user: root
   hosts: db
   gather_facts: false
+  vars_files:
+    - passwords    
   tasks:
     - name: Create user to manage ansible tasks
       user:
         name: ansiuser
         shell: /bin/bash
         home: /home/ansiuser
-        password: aswq12
+        password: "{{ user_passwd }}"
         comment: Manage Ansible Tasks
+      tags: create_ansi_user
+
+    - name: Add user in sudoers file
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        line: 'ansiuser ALL=(ALL) NOPASSWD: ALL'
+        validate: /usr/sbin/visudo -cf %s
+      tags: add_sudo_ansi_user
