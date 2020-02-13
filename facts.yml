@@ -1,0 +1,7 @@
+---
+- name: Print Ansible Facts
+  hosts: db
+  tasks:
+    - name: Print all facts
+      debug:
+        var: ansible_facts.all_ipv4_addresses

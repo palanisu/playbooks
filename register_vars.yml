@@ -1,0 +1,14 @@
+---
+  - name: To check the register variable
+    hosts: db
+    become: True
+    tasks:
+      - name: Install web package
+        yum:
+          name: "{{ web_pkg }}"
+          state: installed
+        register: install_result
+      - name: check the install_result
+        debug:
+          var="{{ install_result }}"
+      
