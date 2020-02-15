@@ -1,7 +1,0 @@
----
-- name: Play to print facts
-  hosts: db
-  tasks:
-    - name: Print all facts
-      debug:
-        var: ansible_facts

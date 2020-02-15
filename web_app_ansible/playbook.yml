@@ -1,0 +1,98 @@
+---
+- name: Install Web application 
+  hosts: webserver
+  vars:
+    firewall_pkg: firewalld
+    firewall_svc: firewalld
+    web_pkg: httpd
+    web_svc: httpd
+    ssl_pkg: mod_ssl
+    httpdconf_src: files/httpd.conf
+    httpdconf_dest: /etc/httpd/conf/httpd.conf
+    htaccess_src: files/.htaccess
+    secrets_dir: /etc/httpd/secrets
+    secrets_src: files/htpasswd
+    secrets_dest: "{{ secrets_dir }}/htpasswd"
+    web_root: /var/www/html
+  tasks:
+    - name: Install {{ firewall_pkg }} {{ web_pkg }} {{ ssl_pkg }} Packages
+      yum:
+        name:
+          - "{{ firewall_pkg }}"
+          - "{{ web_pkg }}"
+          - "{{ ssl_pkg }}"
+        state: latest
+    - name: Copy the file "{{ httpdconf_src }}"
+      copy:
+        src: "{{ httpdconf_src }}"
+        dest: "{{ httpdconf_dest }}"
+        mode: 0644
+        owner: root
+        group: root
+    - name: Create secure password file
+      file:
+        path: "{{ secrets_dir }}"
+        state: directory
+        recurse: yes
+        mode: 0500
+        owner: apache
+        group: apache
+    - name: Copy the authentication file
+      copy:
+        src: "{{ secrets_src }}"
+        dest: "{{ secrets_dest }}"
+        owner: apache
+        group: apache
+        mode: 0400
+    - name: Copy htaccess file
+      copy:
+        src: "{{ htaccess_src }}"
+        dest: "{{ web_root }}/.htaccess"
+        owner: apache
+        group: apache
+        mode: 0400
+    - name: Add content in index file
+      copy:
+        content: "{{ ansible_facts['fqdn'] }} ({{ ansible_facts['default_ipv4']['address'] }}) has been customized by Ansible. \n"
+        dest: "{{ web_root }}/index.html"
+    - name: Start firewall service
+      service:
+        name: "{{ firewall_svc }}"
+        enabled: yes
+        state: started
+    - name: Allow https port in firewall
+      firewalld:
+        service: https
+        permanent: yes
+        state: enabled
+        immediate: yes
+    - name: Enable and Start "{{ web_svc }}"
+      service:
+        name: "{{ web_svc }}"
+        enabled: yes
+        state: started
+
+- name: Test authentication and url access
+  hosts: local
+  become: no
+  vars:
+    web_user: guest
+  vars_files:
+    - vars/secret.yml
+  tasks:
+    - name: Check the URI status
+      uri:
+        url: https://ansible1.example.com
+        validate_certs: no
+        force_basic_auth: yes
+        user: "{{ web_user }}"
+        password: "{{ web_pass }}"
+        return_content: yes
+        state_code: 200
+      register: uri_result
+    - name: Debug the results
+      debug:
+        var: uri_result
+
+        
+

@@ -4,4 +4,5 @@
   tasks:
     - name: Print all facts
       debug:
-        var: ansible_facts.all_ipv4_addresses
+        msg: >
+              The package to install on {{ ansible_facts['fqdn'] }} is {{ ansible_facts['ansible_local']['custom']['packages']['web_pkg'] }}
