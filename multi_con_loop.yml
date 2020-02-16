@@ -1,0 +1,17 @@
+---
+  - name: To check multi condition loop
+    gather_facts: true
+    hosts: webserver
+    tasks:
+      - name:  get postfix service running on nor
+        command: /usr/bin/systemctl is-active postfix
+        ignore_errors: yes
+        register: result
+      - name: restart apache based on postfix
+        service:
+          name: httpd
+          state: restarted
+          #name: mariadb-server
+          #state: latest
+        #loop: "{{ ansible_mounts }}"
+        #when: item.mount == "/" and item.size_available > 30000000
