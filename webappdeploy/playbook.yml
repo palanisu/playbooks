@@ -4,6 +4,7 @@
     become: true
     become_user: root
     become_method: sudo
+  
     tasks:
       - name: Install Python and its dependencies
         yum:
@@ -14,40 +15,6 @@
             - python3-pip
             - python3-PyMySQL
           state: installed
-      
-      - name: Install MySQL database
-        yum:
-          name:
-            - mysql-server
-            - mysql
-          state: installed
-      - name: Install python flask dependency
-        pip:
-          name:
-            - flask
-            - flask-mysql
-          state: present
-      - name: Start the database service
-        service:
-          name: mysqld
-          state: started
-          enabled: yes
-      - name: Create MySQL Database
-        mysql_db:
-          name: employee_db
-          state: present
+      - include: tasks/deploy_db.yml
+      - include: tasks/deploy_web.yml
 
-      - name: Create database and database users
-        mysql_user:
-          name: db_user
-          password: Aq12ws!@!@
-          priv: '*.*:ALL,GRANT'
-          state: present
-          host: '%'
-      - name: Copy the App source code
-        copy:
-          src: app.py
-          dest: /opt/app.py
-      
-      - name: Start Web Server
-        shell: FLASK_APP=/opt/app.py nohup flask run --host=0.0.0.0 &

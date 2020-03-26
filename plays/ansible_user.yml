@@ -2,7 +2,7 @@
 - name: Create Users
   remote_user: root
   hosts: appdb
-  gather_facts: false
+  gather_facts: true
   vars_files:
     - passwords    
   tasks:

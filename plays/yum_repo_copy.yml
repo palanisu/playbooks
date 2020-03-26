@@ -1,6 +1,6 @@
 ---
   - name: Configure RHEL8 Repo
-    hosts: webserver
+    hosts: appdb
     become: true
     tasks:
       - name: Add Base repo

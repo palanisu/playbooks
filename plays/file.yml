@@ -1,0 +1,10 @@
+- name: Create Custom file
+  hosts: all
+  tasks:
+  - name: Create File with data
+    file:
+      path: /var/tmp/file1
+      state: touch
+      mode: 0775
+      owner: ansiuser
+      group: users
