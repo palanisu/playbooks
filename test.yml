@@ -1,0 +1,23 @@
+---
+- name: Test Plays
+  hosts: app
+  tasks:
+
+    - name: get device name
+      debug:
+        var: item.key
+      no_log: True
+      with_dict: "{{ ansible_devices }}"
+      register: dev_info
+    - name: desk details
+      debug:
+        var: item
+      with_items: "{{ dev_info }}"
+      #when: "item.value.host.startswith('Non')"
+      #register: dev_info
+   # - name: show all values for selected device name
+      #debug: var=ansible_devices[device_name]
+      #debug: 
+       # var: dev_info
+    #- name: show only device name
+      #debug: var=device_name

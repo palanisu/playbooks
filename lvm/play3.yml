@@ -1,0 +1,24 @@
+---
+- name: Play to get disk details
+  become: true
+  hosts: app
+  tasks:
+    - name: Get list with shell
+      shell: lsblk -n -e 11 -d -o NAME
+      args:
+        warn: no
+      register: disk_info
+    - name: get disk details
+      debug:
+        var: disk_info.stdout_lines
+    - name: Read device information (always use unit when probing)
+      parted: 
+        device: /dev/{{ item }}
+        unit: MiB
+        state: info
+      loop: "{{ disk_info.stdout_lines }}"
+      register: sdb_info
+    - name: Debug the details
+      debug:                                                                                 
+        msg: "{{ item.0.disk.dev }} {{ item.1.num }}"                                        
+      loop: "{{ sdb_info.results }}"
