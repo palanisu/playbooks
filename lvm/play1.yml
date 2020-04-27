@@ -1,0 +1,16 @@
+---
+  - name : Create Physical Volume
+    hosts: app
+    tasks:
+      - name: Read device information (always use unit when probing)
+        parted: device=/dev/nvme0n2 unit=MiB
+        register: sdb_info
+
+      - name: Remove all partitions from disk
+        #parted:
+        #  device: /dev/nvme0n2
+        #  number: '{{ item.num }}'
+        #  state: info
+        debug:
+          var: sdb_info
+        #loop: '{{ sdb_info.dev.disk }}'

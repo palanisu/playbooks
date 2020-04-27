@@ -3,18 +3,25 @@
     hosts: app
     tasks:
       - name: Discover Disks
-        debug:
-          msg: /dev/{{ item.key }}
-        register: disks
+        #debug:
+        #  msg: /dev/{{ item.value.size }}
           #set_fact:
-        #  disks: "['/dev/{{item.key}}']"
+          #disks: "['/dev/{{item.key}}']"
+        parted:
+          device: /dev/{{ item.key }}
+          unit: MiB
+          state: present
+          flags: [lvm]
+          part_start: 0%
+          part_end: 1GiB
+          part_type: primary
+          number: 1
+
+        with_dict: "{{ ansible_devices }}"
+        ignore_errors: yes
         when:
           - not item.value.partitions
           - item.key is search ("nvme0n|sd")
-        ignore_errors: yes
-        with_dict: "{{ ansible_devices }}"
-        loop_control:
-          label: "{{ item.key }}"
-        
-
-      - debug: var=disks
+          - item.value.size == '5.00 GB'
+        #loop_control:
+        #  label: "{{ item.key }}"

@@ -1,0 +1,22 @@
+---
+  - name: Condition check
+    hosts: app
+    tasks:
+#      - name: Capture who output
+#        command: who
+#        register: loggedin
+#      - shell: echo "User ansible logged in"
+#        when: loggedin.stdout.find('ansiuser') != -1
+      - name : create backup 
+        file:
+          path: /var/backup
+          state: directory
+      - name: retrive list home directory
+        command: ls /home
+        register: home_dirs
+      
+      - name: list directory
+        debug:
+          msg: "/home/{{ item }} is Home dir for {{ item }}"
+        with_items: "{{ home_dirs.stdout_lines }}"
+ 
