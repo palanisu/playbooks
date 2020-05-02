@@ -1,0 +1,15 @@
+---
+  - name: Delete partition on selected Disks
+    hosts: db
+    tasks:
+      - name: Device Info
+        parted:
+          device: /dev/nvme0n2
+        register: device_info
+      - name: Delete partition
+        parted:
+          device: /dev/nvme0n2
+          number: '{{ item.num }}'
+          state: absent
+        with_items: '{{ device_info.partitions }}'
+      
