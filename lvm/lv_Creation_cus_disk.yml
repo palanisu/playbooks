@@ -1,0 +1,25 @@
+---
+  - name: Create partition new fresh disk
+    hosts: db
+    tasks:
+      - name: Disk Information
+        parted:
+          device: /dev/nvme0n2
+          unit: MiB
+        register: disk_infor
+      - name: "Add new partition /dev/nvme0n2"
+        parted: 
+          device: /dev/nvme0n2
+          number: 1
+          part_type: primary
+          flags: [ lvm ]
+          state: present
+          part_end: 100%
+        
+      - name: debug info
+        debug:
+          msg: '{{ item.key }}'
+        with_dict: "{{ ansible_devices }}"
+      #- name: Create Volume Group
+      #    vg: data_vg
+      #    lvs

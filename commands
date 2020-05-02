@@ -51,3 +51,8 @@ Modules to Practise
 16. fetch
 17. yum
 18. service
+
+ansible-play  play.yml --start-at-task <task name>
+ansible-play play.yml --tags <task>
+ansible-play play.yml --skip-tags <task>
+ 
