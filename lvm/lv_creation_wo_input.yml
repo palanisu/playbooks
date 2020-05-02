@@ -1,0 +1,46 @@
+---
+  - name: Create Logical Volume new fresh disk
+    hosts: db
+    vars:
+      disk_det:
+        - dev: nvme0n2
+          vg_name: data_vg
+          lv_name: data_lv
+          mnt_pnt: /data01
+          part_dev: nvme0n2p1
+    tasks:
+      - name: "Create new partition /dev/nvme0n2"
+        parted: 
+          device: "/dev/{{ item.dev }}"
+          number: 1
+          part_type: primary
+          flags: [ lvm ]
+          state: present
+          part_end: 100%
+        loop: "{{ disk_det }}"
+      - name: Create New VG 
+        lvg:
+          vg: "{{item.vg_name}}"
+          pvs: /dev/{{item.part_dev}}
+        loop: "{{disk_det}}"
+      - name: Create LV
+        lvol:
+          lv: "{{item.lv_name}}"
+          vg: "{{item.vg_name}}"
+          size: 2G
+          state: present
+        loop: "{{disk_det}}"
+      - name: Format the filsystem
+        filesystem:
+          fstype: xfs
+          dev: "/dev/mapper/{{item.vg_name}}-{{item.lv_name}}"
+        loop: "{{disk_det}}"
+      - name: Mount the filesystem.
+        mount:
+          src: "/dev/mapper/{{item.vg_name}}-{{item.lv_name}}"
+          path: "{{item.mnt_pnt}}"
+          fstype: xfs
+          state: mounted
+        loop: "{{disk_det}}"
+
+
